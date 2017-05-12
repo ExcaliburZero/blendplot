@@ -1,24 +1,10 @@
 """Plot 3D data sets in Blender."""
+from sklearn import preprocessing
+from mathutils import *
+from math import *
 import bpy
 import pandas as pd
-
-def normalize(df):
-    """
-    Normalize the given dataframe.
-
-    https://stackoverflow.com/questions/12525722/normalize-data-in-pandas
-
-    Parameters
-    ----------
-    df : data frame
-        the data frame to normalize
-
-    Returns
-    -------
-    data frame
-        the normalized data frame
-    """
-    return (df - df.mean()) / (df.max() - df.min())
+import time
 
 def plot(rows, range_scaling, point_size):
     """
@@ -33,25 +19,36 @@ def plot(rows, range_scaling, point_size):
     point_size : float
         the scaling factor to use for the data points
     """
+    obj_scale = Vector((point_size, point_size, point_size))
     for row in rows:
-        x = row[0] * scaling
-        y = row[1] * scaling
-        z = row[2] * scaling
-        cube = bpy.ops.mesh.primitive_cube_add()
-        bpy.ops.transform.resize(value=(point_size, point_size, point_size))
-        bpy.ops.transform.translate(value=(x, y, z))
+        x = row[0] * range_scaling
+        y = row[1] * range_scaling
+        z = row[2] * range_scaling
+        bpy.ops.mesh.primitive_cube_add()
+        cube = bpy.context.active_object
+        cube.scale = obj_scale
+        cube.location = (x, y, z)
 
-def main():
+def main(filename, rows, columns):
     """Plot OGLE IV LMC RRab RR Lyrae data."""
-    file = "~/Code/test/RRab.dat"
-    data = pd.read_csv(file, delim_whitespace=True)
-    data = normalize(data)
+    data = pd.read_csv(filename, nrows = rows)
+    data = pd.DataFrame(data, columns = columns).dropna()
+    data = pd.DataFrame(preprocessing.minmax_scale(data), columns = data.columns)
 
-    rows = zip(data["period"], data["amplitude"], data["magnitude"])
+    rows = zip(data[columns[0]], data[columns[1]], data[columns[2]])
 
-    scaling = 5
-    point_size = 0.01
+    scaling = 5 * 0.5
+    point_size = 0.03
 
     plot(rows, scaling, point_size)
 
-main()
+if __name__ == "__main__":
+    filename = "~/Documents/ogle/ogle4/smc/RRab.csv"
+    rows = 200
+    columns = ["period", "amplitude_Iband", "magnitude_Iband"]
+
+    start = time.time()
+    main(filename, rows, columns)
+    end = time.time()
+
+    print(str(rows) + "," + str(end - start))
