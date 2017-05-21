@@ -30,10 +30,10 @@ def plot(rows, range_scaling, point_size):
         cube.location = (x, y, z)
 
 def main(filename, rows, columns):
-    """Plot OGLE IV LMC RRab RR Lyrae data."""
+    """Plot given data."""
     data = pd.read_csv(filename, nrows = rows)
     data = pd.DataFrame(data, columns = columns).dropna()
-    data = pd.DataFrame(preprocessing.minmax_scale(data), columns = data.columns)
+    data = pd.DataFrame(preprocessing.scale(data), columns = data.columns)
 
     rows = zip(data[columns[0]], data[columns[1]], data[columns[2]])
 
@@ -44,7 +44,7 @@ def main(filename, rows, columns):
 
 if __name__ == "__main__":
     filename = "~/Documents/ogle/ogle4/smc/RRab.csv"
-    rows = 200
+    rows = 1000
     columns = ["period", "amplitude_Iband", "magnitude_Iband"]
 
     start = time.time()
