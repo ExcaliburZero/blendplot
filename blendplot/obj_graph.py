@@ -2,7 +2,6 @@
 Functions for plotting datasets as 3D models in obj format for use in Blender.
 """
 from sklearn import preprocessing
-from math import *
 import pandas as pd
 
 def add_cube_verticies(cube_str, x, y, z, point_size):
