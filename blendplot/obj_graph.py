@@ -1,74 +1,9 @@
-#!/usr/bin/env python
 """
-A script for plotting datasets as 3D models in obj format for use in Blender.
+Functions for plotting datasets as 3D models in obj format for use in Blender.
 """
 from sklearn import preprocessing
 from math import *
-import cli.app
 import pandas as pd
-import time
-
-@cli.app.CommandLineApp
-def obj_graph(app):
-    """
-    Runs the cli interface form the program.
-
-    Parameters
-    ----------
-    app : cli.app.CommandLineApp
-        the cli information
-    """
-    input_filename = app.params.input_file
-    output_filename = app.params.output_file
-    num_rows = app.params.rows
-    columns = [
-                app.params.x,
-                app.params.y,
-                app.params.z
-            ]
-    spacing = app.params.spacing
-    point_size = app.params.pointsize
-
-    main(input_filename, output_filename, num_rows, columns, spacing, point_size)
-
-obj_graph.add_param("input_file", help="data file to plot", type=str)
-obj_graph.add_param("output_file", help="obj file to output to", type=str)
-obj_graph.add_param("x", help="x column", type=str)
-obj_graph.add_param("y", help="y column", type=str)
-obj_graph.add_param("z", help="z column", type=str)
-
-obj_graph.add_param("-r", "--rows", help="number of rows from the data file to plot", default=None, type=int)
-obj_graph.add_param("--spacing", help="the scaling factor to space the data out by", default=2.0, type=float)
-obj_graph.add_param("--pointsize", help="the size to use for the data points", default=0.0625, type=float)
-
-def main(input_filename, output_filename, num_rows, columns, spacing, point_size):
-    """
-    Plots the data in the given input file to the given output file with the
-    specified settings.
-
-    Parameters
-    ----------
-    input_filename : str
-        the path to the input data file
-    output_filename : file
-        the path of the file to write the plot to
-    num_rows : int
-        the number of rows to plot, or None to plot all rows
-    columns : List[str]
-        the columns to plot
-    spacing : float
-        the scaling of the data range
-    point_size : float
-        the size to use for the data points
-    """
-    output_file = open(output_filename, "w")
-    start = time.time()
-    points = plot_file(input_filename, output_file, num_rows, columns, spacing, point_size)
-    end = time.time()
-    output_file.close()
-
-    print("Wrote plot file to %s" % output_filename)
-    print("Plotted %s points in %f seconds" % (points, end - start))
 
 def add_cube_verticies(cube_str, x, y, z, point_size):
     """
@@ -232,6 +167,3 @@ def plot_file(input_filename, output_file, num_rows, columns, spacing, point_siz
 
     points = num_rows if num_rows != None else len(data.index)
     return points
-
-if __name__ == "__main__":
-    obj_graph.run()
