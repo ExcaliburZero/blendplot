@@ -26,8 +26,9 @@ def blendplot(app):
             ]
     spacing = app.params.spacing
     point_size = app.params.pointsize
+    category_column = app.params.category
 
-    main(input_filename, output_filename, num_rows, columns, spacing, point_size)
+    main(input_filename, output_filename, num_rows, columns, spacing, point_size, category_column)
 
 blendplot.add_param("input_file", help="data file to plot", type=str)
 blendplot.add_param("output_file", help="obj file to output to", type=str)
@@ -38,8 +39,9 @@ blendplot.add_param("z", help="z column", type=str)
 blendplot.add_param("-r", "--rows", help="number of rows from the data file to plot", default=None, type=int)
 blendplot.add_param("--spacing", help="the scaling factor to space the data out by", default=2.0, type=float)
 blendplot.add_param("--pointsize", help="the size to use for the data points", default=0.0625, type=float)
+blendplot.add_param("-c", "--category", help="the column to use for point categorization", default=None, type=str)
 
-def main(input_filename, output_filename, num_rows, columns, spacing, point_size):
+def main(input_filename, output_filename, num_rows, columns, spacing, point_size, category_column):
     """
     Plots the data in the given input file to the given output file with the
     specified settings.
@@ -58,10 +60,13 @@ def main(input_filename, output_filename, num_rows, columns, spacing, point_size
         the scaling of the data range
     point_size : float
         the size to use for the data points
+    category_column : str
+        the column to categorize the points by, or None to plot data without
+        categories
     """
     output_file = open(output_filename, "w")
     start = time.time()
-    points = obj_graph.plot_file(input_filename, output_file, num_rows, columns, spacing, point_size)
+    points = obj_graph.plot_file(input_filename, output_file, num_rows, columns, spacing, point_size, category_column)
     end = time.time()
     output_file.close()
 

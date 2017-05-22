@@ -112,7 +112,7 @@ def add_cube(x, y, z, point_size, start_num, output_file):
     output_file.write(
             cube_string(x, y, z, point_size, start_num))
 
-def plot(rows, spacing, point_size, output_file):
+def plot(rows, spacing, point_size, output_file, start_num):
     """
     Plots the given 3D dataset using the given range scaling and point size to
     the given output file.
@@ -127,8 +127,14 @@ def plot(rows, spacing, point_size, output_file):
         the size to use for the data points
     output_file : file
         the file to write the plot to
+    start_num : int
+        the last used vertex number
+
+    Returns
+    -------
+    start_num : int
+        the new last used vertex number
     """
-    start_num = 0
     for row in rows:
         x = row[0] * spacing
         y = row[1] * spacing
@@ -136,7 +142,9 @@ def plot(rows, spacing, point_size, output_file):
         add_cube(x, y, z, point_size, start_num, output_file)
         start_num += 8
 
-def plot_file(input_filename, output_file, num_rows, columns, spacing, point_size):
+    return start_num
+
+def plot_file(input_filename, output_file, num_rows, columns, spacing, point_size, category_column):
     """
     Plots the data from the given input file to the given output file and
     returns the number of points plotted.
@@ -155,14 +163,36 @@ def plot_file(input_filename, output_file, num_rows, columns, spacing, point_siz
         the scaling of the data range
     point_size : float
         the size to use for the data points
+    category_column : str
+        the column to categorize the points by, or None to plot data without
+        categories
+
+    Returns
+    -------
+    points : int
+        the number of points that were plotted
     """
-    data = pd.read_csv(input_filename, nrows = num_rows)
-    data = pd.DataFrame(data, columns = columns).dropna()
+    original_data = pd.read_csv(input_filename, nrows = num_rows)
+    data = pd.DataFrame(original_data, columns = columns).dropna()
     data = pd.DataFrame(preprocessing.scale(data), columns = data.columns)
 
-    rows = zip(data[columns[0]], data[columns[1]], data[columns[2]])
+    start_num = 0
 
-    plot(rows, spacing, point_size, output_file)
+    if category_column is None:
+        rows = zip(data[columns[0]], data[columns[1]], data[columns[2]])
 
-    points = num_rows if num_rows != None else len(data.index)
+        output_file.write("o data\n")
+        plot(rows, spacing, point_size, output_file, start_num)
+    else:
+        data[category_column] = original_data[category_column]
+
+        categories = data[category_column].unique()
+        for cat in categories:
+            cat_data = data[data[category_column] == cat]
+            rows = zip(cat_data[columns[0]], cat_data[columns[1]], cat_data[columns[2]])
+
+            output_file.write("o %s\n" % cat)
+            start_num = plot(rows, spacing, point_size, output_file, start_num)
+
+    points = num_rows if num_rows is not None else len(data.index)
     return points
