@@ -1,0 +1,5 @@
+pyCLI
+sklearn
+scipy
+pandas
+hypothesis
