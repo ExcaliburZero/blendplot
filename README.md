@@ -1,4 +1,4 @@
-# Blendplot
+# Blendplot [![Travis CI Status](https://api.travis-ci.org/ExcaliburZero/blender-astro-visualization.svg)](https://travis-ci.org/ExcaliburZero/blender-astro-visualization) [![Coverage Status](https://coveralls.io/repos/github/ExcaliburZero/blender-astro-visualization/badge.svg?branch=master)](https://coveralls.io/github/ExcaliburZero/blender-astro-visualization?branch=master)
 Blendplot is a command line application for generating 3D data plots for use in Blender.
 
 ```
