@@ -33,5 +33,7 @@ To plot data that is grouped into categories, you can use the `-c` flag and spec
 python3 blendplot data.csv model.obj height weight cost -c category
 ```
 
+![The objects created from a plot with categories](img/category_objects.png)
+
 ## Licensing
 The source code for Blendplot is available under the [MIT License](https://opensource.org/licenses/MIT), see `LICENSE` for more information.
