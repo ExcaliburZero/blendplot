@@ -10,7 +10,7 @@ Plotted 37099 points in 1.531214 seconds
 ![An example of a model generated with Blendplot using data from the OGLE IV lmc survey](img/render_01.png)
 
 ## Usage
-Blendplot allows you to generate a 3D data plot model by specifying dataset file, the output model file (`.obj`), and the names of the three (x,y,z) columns want to plot. Currently it only supports `.csv` input data files.
+Blendplot allows you to generate a 3D data plot model by specifying a dataset file, the output model file (`.obj`), and the names of the three (x,y,z) columns you want to plot. Currently it only supports `.csv` input data files. The commad structure to run blendplot is as follows.
 
 ```
 python3 blendplot INPUT_FILE OUTPUT_FILE X Y Z
