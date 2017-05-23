@@ -1,6 +1,12 @@
 # Blendplot
 Blendplot is a command line application for generating 3D data plots for use in Blender.
 
+```
+$ python3 blendplot abc.csv abc.obj period amplitude_Iband magnitude_Iband -c category 
+Wrote plot file to abc.obj
+Plotted 37099 points in 1.531214 seconds
+```
+
 ![An example of a model generated with Blendplot using data from the OGLE IV lmc survey](img/render_01.png)
 
 ## Usage
