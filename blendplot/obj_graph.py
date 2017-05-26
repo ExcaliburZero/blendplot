@@ -3,6 +3,7 @@ Functions for plotting datasets as 3D models in obj format for use in Blender.
 """
 from sklearn import preprocessing
 import pandas as pd
+import sys
 
 def add_cube_verticies(cube_str, x, y, z, point_size):
     """
@@ -170,9 +171,20 @@ def plot_file(input_filename, output_file, num_rows, columns, spacing, point_siz
     Returns
     -------
     points : int
-        the number of points that were plotted
+        the number of points that were plotted, or None if the plot is unable
+        to be made
     """
     original_data = pd.read_csv(input_filename, nrows = num_rows)
+
+    missing = get_missing_columns(original_data, columns, category_column)
+    if len(missing) > 0:
+        missing_columns = ", ".join(missing)
+        valid_columns = ", ".join(list(original_data.columns))
+        error_msg = "Invalid column(s): %s\n" % missing_columns
+        error_msg += "Valid columns are: %s" % valid_columns
+        print(error_msg, file=sys.stderr)
+        return None
+
     data = pd.DataFrame(original_data, columns = columns).dropna()
     data = pd.DataFrame(preprocessing.scale(data), columns = data.columns)
 
@@ -196,3 +208,32 @@ def plot_file(input_filename, output_file, num_rows, columns, spacing, point_siz
 
     points = num_rows if num_rows is not None else len(data.index)
     return points
+
+def get_missing_columns(data, columns, category_column):
+    """
+    Returns all of the given columns that are not in the given dataframe.
+
+    Parameters
+    ----------
+    columns : List[str]
+        the columns to look for
+    category_column : str
+        the category column to look for, or None if there is no category column
+        being used
+
+    Returns
+    -------
+    missing : List[str]
+        a list of the missing columns
+    """
+    data_columns = set(data.columns)
+
+    if not category_column is None:
+        columns = columns + [category_column]
+
+    missing = []
+    for col in columns:
+        if not col in data_columns:
+            missing.append(col)
+
+    return missing

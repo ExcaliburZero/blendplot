@@ -5,6 +5,8 @@ import unittest
 
 from blendplot.obj_graph import *
 
+import utilities
+
 class TestObjGraph(unittest.TestCase):
     def test_add_cube_verticies(self):
         cube_str = ""
@@ -120,6 +122,52 @@ class TestObjGraph(unittest.TestCase):
 
             self.assertEquals(actual_output, expected_output)
 
+    def test_plot_file_invalid_column(self):
+        input_filename = "test/resources/data_01.csv"
+        output_file = io.StringIO()
+        num_rows = None
+        invalid_column = "u"
+        columns = [invalid_column, "b", "c"]
+        spacing = 0.5
+        point_size = 0.1
+        category_column = None
+
+        func = lambda x: plot_file(input_filename, output_file, num_rows, columns, spacing, point_size, category_column)
+
+        (actual_return, actual_error) = utilities.capture_stderr(func)
+        expected_error = "Invalid column(s): %s\nValid columns are: a, b, c, d, category\n" % invalid_column
+
+        self.assertEquals(actual_error, expected_error)
+        self.assertEquals(actual_return, None)
+
+        actual_output = output_file.getvalue()
+        expected_output = ""
+
+        self.assertEquals(actual_output, expected_output)
+
+    def test_plot_file_invalid_column_multiple(self):
+        input_filename = "test/resources/data_01.csv"
+        output_file = io.StringIO()
+        num_rows = None
+        invalid_columns = ["u", "A"]
+        columns = ["c"] + invalid_columns
+        spacing = 0.5
+        point_size = 0.1
+        category_column = None
+
+        func = lambda x: plot_file(input_filename, output_file, num_rows, columns, spacing, point_size, category_column)
+
+        (actual_return, actual_error) = utilities.capture_stderr(func)
+        expected_error = "Invalid column(s): %s, %s\nValid columns are: a, b, c, d, category\n" % (invalid_columns[0], invalid_columns[1])
+
+        self.assertEquals(actual_error, expected_error)
+        self.assertEquals(actual_return, None)
+
+        actual_output = output_file.getvalue()
+        expected_output = ""
+
+        self.assertEquals(actual_output, expected_output)
+
     def test_plot_file_category(self):
         input_filename = "test/resources/data_01.csv"
         output_file = io.StringIO()
@@ -141,6 +189,28 @@ class TestObjGraph(unittest.TestCase):
             expected_output = myfile.read()
 
             self.assertEquals(actual_output, expected_output)
+
+    def test_plot_file_category_invalid(self):
+        input_filename = "test/resources/data_01.csv"
+        output_file = io.StringIO()
+        num_rows = 4
+        columns = ["a", "b", "c"]
+        spacing = 0.5
+        point_size = 0.1
+        invalid_category_column = "cats"
+
+        func = lambda x: plot_file(input_filename, output_file, num_rows, columns, spacing, point_size, invalid_category_column)
+
+        (actual_return, actual_error) = utilities.capture_stderr(func)
+        expected_error = "Invalid column(s): %s\nValid columns are: a, b, c, d, category\n" % invalid_category_column
+
+        self.assertEquals(actual_error, expected_error)
+        self.assertEquals(actual_return, None)
+
+        actual_output = output_file.getvalue()
+        expected_output = ""
+
+        self.assertEquals(actual_output, expected_output)
 
 @given(
   st.text(),
