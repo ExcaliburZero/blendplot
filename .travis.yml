@@ -11,6 +11,8 @@ install:
 
 script:
   - nosetests --with-coverage --cover-package=blendplot
+  - pip install ./
+  - blendplot test/resources/data_01.csv data.obj a b c
 
 after_success:
   - coveralls

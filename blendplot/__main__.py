@@ -4,7 +4,7 @@ A cli application for plotting 3D data in obj format for use in Blender.
 import cli.app
 import time
 
-import obj_graph
+from . import obj_graph
 
 @cli.app.CommandLineApp
 def blendplot(app):
@@ -73,5 +73,8 @@ def main(input_filename, output_filename, num_rows, columns, spacing, point_size
     print("Wrote plot file to %s" % output_filename)
     print("Plotted %s points in %f seconds" % (points, end - start))
 
-if __name__ == "__main__":
+def run():
     blendplot.run()
+
+if __name__ == "__main__":
+    run()
