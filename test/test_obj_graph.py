@@ -108,8 +108,9 @@ class TestObjGraph(unittest.TestCase):
         spacing = 0.5
         point_size = 0.1
         category_column = None
+        scale_function = "scale"
 
-        actual_ret = plot_file(input_filename, output_file, num_rows, columns, spacing, point_size, category_column)
+        actual_ret = plot_file(input_filename, output_file, num_rows, columns, spacing, point_size, category_column, scale_function)
         expected_ret = 5
 
         self.assertEquals(actual_ret, expected_ret)
@@ -122,6 +123,31 @@ class TestObjGraph(unittest.TestCase):
 
             self.assertEquals(actual_output, expected_output)
 
+    def test_plot_file_scale_functions(self):
+        functions = ["maxabs_scale", "minmax_scale", "normalize", "robust_scale", "scale", "none"]
+        for func in functions:
+            input_filename = "test/resources/data_01.csv"
+            output_file = io.StringIO()
+            num_rows = None
+            columns = ["a", "b", "c"]
+            spacing = 0.5
+            point_size = 0.1
+            category_column = None
+            scale_function = func
+
+            actual_ret = plot_file(input_filename, output_file, num_rows, columns, spacing, point_size, category_column, scale_function)
+            expected_ret = 5
+
+            self.assertEquals(actual_ret, expected_ret)
+
+            actual_output = output_file.getvalue()
+
+            test_file = "test/expected/test_plot_file_scale_function_" + func + ".obj"
+            with open(test_file, 'r') as myfile:
+                expected_output = myfile.read()
+
+                self.assertEquals(actual_output, expected_output)
+
     def test_plot_file_invalid_column(self):
         input_filename = "test/resources/data_01.csv"
         output_file = io.StringIO()
@@ -131,8 +157,9 @@ class TestObjGraph(unittest.TestCase):
         spacing = 0.5
         point_size = 0.1
         category_column = None
+        scale_function = "scale"
 
-        func = lambda x: plot_file(input_filename, output_file, num_rows, columns, spacing, point_size, category_column)
+        func = lambda x: plot_file(input_filename, output_file, num_rows, columns, spacing, point_size, category_column, scale_function)
 
         (actual_return, actual_error) = utilities.capture_stderr(func)
         expected_error = "Invalid column(s): %s\nValid columns are: a, b, c, d, category\n" % invalid_column
@@ -154,8 +181,9 @@ class TestObjGraph(unittest.TestCase):
         spacing = 0.5
         point_size = 0.1
         category_column = None
+        scale_function = "scale"
 
-        func = lambda x: plot_file(input_filename, output_file, num_rows, columns, spacing, point_size, category_column)
+        func = lambda x: plot_file(input_filename, output_file, num_rows, columns, spacing, point_size, category_column, scale_function)
 
         (actual_return, actual_error) = utilities.capture_stderr(func)
         expected_error = "Invalid column(s): %s, %s\nValid columns are: a, b, c, d, category\n" % (invalid_columns[0], invalid_columns[1])
@@ -176,8 +204,9 @@ class TestObjGraph(unittest.TestCase):
         spacing = 0.5
         point_size = 0.1
         category_column = "category"
+        scale_function = "scale"
 
-        actual_ret = plot_file(input_filename, output_file, num_rows, columns, spacing, point_size, category_column)
+        actual_ret = plot_file(input_filename, output_file, num_rows, columns, spacing, point_size, category_column, scale_function)
         expected_ret = num_rows
 
         self.assertEquals(actual_ret, expected_ret)
@@ -198,8 +227,9 @@ class TestObjGraph(unittest.TestCase):
         spacing = 0.5
         point_size = 0.1
         invalid_category_column = "cats"
+        scale_function = "scale"
 
-        func = lambda x: plot_file(input_filename, output_file, num_rows, columns, spacing, point_size, invalid_category_column)
+        func = lambda x: plot_file(input_filename, output_file, num_rows, columns, spacing, point_size, invalid_category_column, scale_function)
 
         (actual_return, actual_error) = utilities.capture_stderr(func)
         expected_error = "Invalid column(s): %s\nValid columns are: a, b, c, d, category\n" % invalid_category_column

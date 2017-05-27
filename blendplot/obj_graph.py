@@ -145,7 +145,7 @@ def plot(rows, spacing, point_size, output_file, start_num):
 
     return start_num
 
-def plot_file(input_filename, output_file, num_rows, columns, spacing, point_size, category_column):
+def plot_file(input_filename, output_file, num_rows, columns, spacing, point_size, category_column, scale_function):
     """
     Plots the data from the given input file to the given output file and
     returns the number of points plotted.
@@ -167,6 +167,8 @@ def plot_file(input_filename, output_file, num_rows, columns, spacing, point_siz
     category_column : str
         the column to categorize the points by, or None to plot data without
         categories
+    scale_function : str
+        the name of the data scaling function to use
 
     Returns
     -------
@@ -186,7 +188,7 @@ def plot_file(input_filename, output_file, num_rows, columns, spacing, point_siz
         return None
 
     data = pd.DataFrame(original_data, columns = columns).dropna()
-    data = pd.DataFrame(preprocessing.scale(data), columns = data.columns)
+    data = pd.DataFrame(scale_data(data, scale_function), columns = data.columns)
 
     start_num = 0
 
@@ -237,3 +239,18 @@ def get_missing_columns(data, columns, category_column):
             missing.append(col)
 
     return missing
+
+def scale_data(original_data, scale_name):
+    scale_functions = {
+                "maxabs_scale": preprocessing.maxabs_scale,
+                "minmax_scale": preprocessing.minmax_scale,
+                "normalize": preprocessing.normalize,
+                "robust_scale": preprocessing.robust_scale,
+                "scale": preprocessing.scale,
+                "none": lambda x: x
+            }
+
+    function = scale_functions[scale_name]
+    scaled_data = function(original_data)
+
+    return scaled_data

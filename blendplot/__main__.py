@@ -28,8 +28,9 @@ def blendplot(app):
     spacing = app.params.spacing
     point_size = app.params.pointsize
     category_column = app.params.category
+    scale_function = app.params.scale_function
 
-    main(input_filename, output_filename, num_rows, columns, spacing, point_size, category_column)
+    main(input_filename, output_filename, num_rows, columns, spacing, point_size, category_column, scale_function)
 
 blendplot.add_param("input_file", help="data file to plot", type=str)
 blendplot.add_param("output_file", help="obj file to output to", type=str)
@@ -41,8 +42,9 @@ blendplot.add_param("-r", "--rows", help="number of rows from the data file to p
 blendplot.add_param("--spacing", help="the scaling factor to space the data out by", default=2.0, type=float)
 blendplot.add_param("--pointsize", help="the size to use for the data points", default=0.0625, type=float)
 blendplot.add_param("-c", "--category", help="the column to use for point categorization", default=None, type=str)
+blendplot.add_param("--scale-function", help="the function to use for scaling the data, valid options are \"maxabs_scale\", \"minmax_scale\", \"normalize\", \"robust_scale\", \"scale\", and \"none\"", default="scale", type=str)
 
-def main(input_filename, output_filename, num_rows, columns, spacing, point_size, category_column):
+def main(input_filename, output_filename, num_rows, columns, spacing, point_size, category_column, scale_function):
     """
     Plots the data in the given input file to the given output file with the
     specified settings.
@@ -64,10 +66,20 @@ def main(input_filename, output_filename, num_rows, columns, spacing, point_size
     category_column : str
         the column to categorize the points by, or None to plot data without
         categories
+    scale_function : str
+        the name of the data scaling function to use
     """
+    valid_scale_functions = ["maxabs_scale", "minmax_scale", "normalize", "robust_scale", "scale", "none"]
+    if not scale_function in valid_scale_functions:
+        print("Invalid scale-function: %s" % scale_function, file=sys.stderr)
+
+        valid_function_list = ", ".join(valid_scale_functions)
+        print("Valid scale-functions are: %s" % valid_function_list, file=sys.stderr)
+        sys.exit(1)
+
     output_file = open(output_filename, "w")
     start = time.time()
-    points = obj_graph.plot_file(input_filename, output_file, num_rows, columns, spacing, point_size, category_column)
+    points = obj_graph.plot_file(input_filename, output_file, num_rows, columns, spacing, point_size, category_column, scale_function)
     end = time.time()
     output_file.close()
 
