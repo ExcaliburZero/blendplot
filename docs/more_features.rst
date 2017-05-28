@@ -17,3 +17,14 @@ To plot data that is grouped into categories, you can use the -c flag and specif
    :width: 280px
    :scale: 100 %
    :align: center
+
+Setting Number of Rows to Plot
+------------------------------
+
+If you have a particularly large dataset, but only want to plot some of the points then you can use the ``-r`` or ``--rows`` flags to specify how many rows you want to plot. When you use the flag and specify a number of rows ``n``, then only the first ``n`` points in the dataset will be plotted. 
+
+For example, the following command will plot only the first 20 points in the dataset.
+
+::
+
+    blendplot data.csv model.obj height weight cost --rows 20
