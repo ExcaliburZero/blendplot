@@ -26,7 +26,7 @@ def blendplot(app):
                 app.params.z
             ]
     spacing = app.params.spacing
-    point_size = app.params.pointsize
+    point_size = app.params.point_size
     category_column = app.params.category
     scale_function = app.params.scale_function
 
@@ -40,7 +40,7 @@ blendplot.add_param("z", help="z column", type=str)
 
 blendplot.add_param("-r", "--rows", help="number of rows from the data file to plot", default=None, type=int)
 blendplot.add_param("--spacing", help="the scaling factor to space the data out by", default=2.0, type=float)
-blendplot.add_param("--pointsize", help="the size to use for the data points", default=0.0625, type=float)
+blendplot.add_param("--point-size", help="the size to use for the data points", default=0.0625, type=float)
 blendplot.add_param("-c", "--category", help="the column to use for point categorization", default=None, type=str)
 blendplot.add_param("--scale-function", help="the function to use for scaling the data, valid options are \"maxabs_scale\", \"minmax_scale\", \"normalize\", \"robust_scale\", \"scale\", and \"none\"", default="scale", type=str)
 
