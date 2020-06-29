@@ -10,6 +10,12 @@ Plotted 37099 points in 1.531214 seconds
 ![An example of a model generated with Blendplot using data from the OGLE IV lmc survey](img/render_01.png)
 
 ## Installation
+### From PyPI
+```
+pip install blendplot
+```
+
+### From source
 To install Blendplot from source you can run the following commands.
 
 ```
