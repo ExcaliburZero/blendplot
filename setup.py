@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup( \
       name='blendplot',
-      version='0.1.0',
+      version='1.0.0',
       description='A program for plotting 3D scatter plots for use in Blender',
       long_description=open('README.md').read(),
       long_description_content_type='text/markdown',
@@ -26,7 +26,6 @@ setup( \
           'Programming Language :: Python',
           'Programming Language :: Python :: 3',
           'Operating System :: OS Independent',
-          'Development Status :: 2 - Pre-Alpha',
           'License :: OSI Approved :: MIT License'
       ],
       entry_points = {
