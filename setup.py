@@ -5,6 +5,7 @@ setup( \
       version='0.1.0',
       description='A program for plotting 3D scatter plots for use in Blender',
       long_description=open('README.md').read(),
+      long_description_content_type='text/markdown',
       url='https://github.com/ExcaliburZero/blender-astro-visualization',
       author='Christopher Wells',
       author_email='cwellsny@nycap.rr.com',
