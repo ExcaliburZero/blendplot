@@ -13,7 +13,7 @@ setup( \
       packages=['blendplot'],
       install_requires=[
           'pyCLI',
-          'sklearn',
+          'scikit-learn',
           'scipy',
           'pandas'
       ],
